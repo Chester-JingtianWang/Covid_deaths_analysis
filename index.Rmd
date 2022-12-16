@@ -1,9 +1,24 @@
 --- 
-title: "YOUR TITLE HERE"
-author: "YOUR NAMES HERE"
+title: "Conditions Contributing to COVID-19 Deaths, by State and Age, Provisional
+  2020-2022"
+author: "Jingtian Wang    Tongli Su   Michelle Sun"
 date: "`r Sys.Date()`"
 site: bookdown::bookdown_site
 ---
 
 # Introduction
 
+The COVID-19 pandemic has had a devastating impact on the lives of people around the world, and the United States has been no exception. Since the virus first emerged in early 2020, it has spread rapidly and claimed the lives of hundreds of thousands of people in the United States alone, with the number of deaths continuing to rise. In this project, we will delve deeper into the data on COVID-19 deaths in the United States to understand the patterns and trends in the spread of the virus and its impact on different age groups, states, and medical conditions.
+
+To do this, we will use a combination of exploratory data analysis and data visualization techniques. We will classify death cases by people's ages, states, condition groups, and conditions, and use bar charts, line graphs, and other visualizations to uncover insights and highlight the most important findings. By understanding the factors that influence the spread of the COVID-19 virus and the severity of its impact, we can better inform public health policy and help protect the lives of those most at risk.
+  
+Through this project, we aim to provide a comprehensive and thorough analysis of the data on COVID-19 deaths in the United States. By examining the data from multiple angles and using a range of data visualization techniques, we hope to shed light on the complex and evolving situation surrounding the pandemic, and to provide valuable insights for policymakers and public health officials.
+  
+In studying, we mainly focus on the following specific questions:  
+1) The death distribution in the US by states;  
+2) The death distribution of people with different condition groups in each state;  
+3) The impact of each condition group on people with different ages;  
+4) The distribution of specific conditions under two condition groups, respiratory diseases and circulatory diseases;  
+5) The death distribution in each state by age groups;  
+6) What is the trend of death vs date in the US;  
+7) What is the trend of death vs date in each state

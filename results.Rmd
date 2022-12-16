@@ -1,1 +1,414 @@
 # Results
+
+## Graph 1
+
+```{r}
+# 2020-2022
+g1_all <- 
+  ggplot(map_and_data_all, aes(x = long, y = lat, group = group)) +
+    geom_polygon(aes(group = group, fill = COVID.19.Deaths)) +
+    scale_fill_binned(type = "viridis",
+                      guide = guide_colourbar(barwidth = 10, barheight = 0.6, title.position = "top")) + # bar setting
+    coord_map(projection = "albers", lat0 = 45.5, lat1 = 29.5) +
+    labs(x = "Longitude", y = "Latitude", fill = "COVID-19 Deaths") + 
+    theme_void() +
+    theme(legend.position = "bottom") + # bar position
+    labs(title= "2020-2022") + 
+    theme(plot.title = element_text(hjust = 0.5))
+
+# 2020
+g1_2020 <- 
+  ggplot(map_and_data_2020, aes(x = long, y = lat, group = group)) +
+    geom_polygon(aes(group = group, fill = COVID.19.Deaths)) +
+    scale_fill_binned(type = "viridis",
+                      guide = guide_colourbar(barwidth = 10, barheight = 0.6, title.position = "top")) + # bar setting
+    coord_map(projection = "albers", lat0 = 45.5, lat1 = 29.5) +
+    labs(x = "Longitude", y = "Latitude", fill = "COVID-19 Deaths") + 
+    theme_void() +
+    theme(legend.position = "bottom") + # bar position
+    labs(title= "2020") + 
+    theme(plot.title = element_text(hjust = 0.5))
+
+# 2021
+g1_2021 <- 
+  ggplot(map_and_data_2021, aes(x = long, y = lat, group = group)) +
+    geom_polygon(aes(group = group, fill = COVID.19.Deaths)) +
+    scale_fill_binned(type = "viridis",
+                      guide = guide_colourbar(barwidth = 10, barheight = 0.6, title.position = "top")) + # bar setting
+    coord_map(projection = "albers", lat0 = 45.5, lat1 = 29.5) +
+    labs(x = "Longitude", y = "Latitude", fill = "COVID-19 Deaths") + 
+    theme_void() +
+    theme(legend.position = "bottom") + # bar position
+    labs(title= "2021") + 
+    theme(plot.title = element_text(hjust = 0.5))
+
+# 2022
+g1_2022 <- 
+  ggplot(map_and_data_2022, aes(x = long, y = lat, group = group)) +
+    geom_polygon(aes(group = group, fill = COVID.19.Deaths)) +
+    scale_fill_binned(type = "viridis",
+                      guide = guide_colourbar(barwidth = 10, barheight = 0.6, title.position = "top")) + # bar setting
+    coord_map(projection = "albers", lat0 = 45.5, lat1 = 29.5) +
+    labs(x = "Longitude", y = "Latitude", fill = "COVID-19 Deaths") + 
+    theme_void() +
+    theme(legend.position = "bottom") + # bar position
+    labs(title= "2022") + 
+    theme(plot.title = element_text(hjust = 0.5))
+
+ggarrange(g1_all, g1_2020, g1_2021, g1_2022, ncol = 2, nrow = 2)
+```
+
+From Graph 1, We make chloropleth maps to report and compare the COVID-19 deaths in United States from 2020 to 2022.
+
+Overall in the three years period, California has the most number of deaths with about 900,000 deaths reported, followed by Texas's about 700,000 deaths and Florida's about 500,000 deaths. Other parts that stands out are the northeastern states, some southeastern states and Arizona. Other states each has an average of 100,000 deaths reported.
+
+In 2021 and 2022, the states have the similar death distribution as the total deaths in the 3 years period. In 2020, Texas stands out together with California in the number of deaths reported in state. The total deaths reported in United States in 2020 is relatively the lowest comparing to the other years, and the total deaths reported in United States in 2021 is relatively the largest comparing to other years observing from the graph. Besides, from 2020 to 2022, the number of deaths in the Eastern US increases compared with other places since there is a increasing number of states in the eastern US jump out of the lowest bar.
+
+## Graph 2
+### 2020-2022
+```{r, fig.width = 20, fig.height = 20} 
+
+g2_all <- ggplot(DF2_all, aes(x = fct_reorder2(DF2_all$State, DF2_all$`Condition Group`, DF2_all$Proportion, .fun = last2, .desc = F), # Reorder
+                           y = DF2_all$Proportion,
+                           fill = DF2_all$`Condition Group`)) +
+  geom_col(position = "fill") +
+  coord_flip() +
+  ggtitle("2020-2022") +
+  labs(x = "State", y = "Proportion", fill = "Condition Groups") +
+  scale_fill_brewer(palette = "Set3") +
+  theme_bw() + #Get rid of grey background
+  theme(panel.grid=element_blank()) +
+  theme(legend.title = element_text(size = 20), #change legend title font size
+        legend.text = element_text(size = 15), #change legend text font size
+        plot.title = element_text(size = 40, face = "bold", hjust = 0.5),
+        axis.text = element_text(size = 15),
+        axis.title = element_text(size = 15)) 
+  
+g2_all
+```
+  
+### 2020
+```{r, fig.width = 20, fig.height = 20} 
+
+g2_2020 <- ggplot(DF2_2020, aes(x = fct_reorder2(DF2_2020$State, DF2_2020$`Condition Group`, DF2_2020$Proportion, .fun = last2, .desc = F), # Reorder
+                           y = DF2_2020$Proportion,
+                           fill = DF2_2020$`Condition Group`)) +
+  geom_col(position = "fill") +
+  coord_flip() +
+  ggtitle("2020") +
+  labs(x = "State", y = "Proportion", fill = "Condition Groups") +
+  scale_fill_brewer(palette = "Set3") +
+  theme_bw() + #Get rid of grey background
+  theme(panel.grid=element_blank()) +
+  theme(legend.title = element_text(size = 20), #change legend title font size
+        legend.text = element_text(size = 15), #change legend text font size
+        plot.title = element_text(size = 40, face = "bold", hjust = 0.5),
+        axis.text = element_text(size = 15),
+        axis.title = element_text(size = 15))
+
+g2_2020
+```
+
+### 2021
+```{r, fig.width = 20, fig.height = 20} 
+
+g2_2021 <- ggplot(DF2_2021, aes(x = fct_reorder2(DF2_2021$State, DF2_2021$`Condition Group`, DF2_2021$Proportion, .fun = last2, .desc = F), # Reorder
+                           y = DF2_2021$Proportion,
+                           fill = DF2_2021$`Condition Group`)) +
+  geom_col(position = "fill") +
+  coord_flip() +
+  ggtitle("2021") +
+  labs(x = "State", y = "Proportion", fill = "Condition Groups") +
+  scale_fill_brewer(palette = "Set3") +
+  theme_bw() + #Get rid of grey background
+  theme(panel.grid=element_blank()) +
+  theme(legend.title = element_text(size = 20), #change legend title font size
+        legend.text = element_text(size = 15), #change legend text font size
+        plot.title = element_text(size = 40, face = "bold", hjust = 0.5),
+        axis.text = element_text(size = 15),
+        axis.title = element_text(size = 15))
+
+g2_2021
+```
+
+### 2022
+```{r, fig.width = 20, fig.height = 20} 
+
+g2_2022 <- ggplot(DF2_2022, aes(x = fct_reorder2(DF2_2022$State, DF2_2022$`Condition Group`, DF2_2022$Proportion, .fun = last2, .desc = F), # Reorder
+                           y = DF2_2022$Proportion,
+                           fill = DF2_2022$`Condition Group`)) +
+  geom_col(position = "fill") +
+  coord_flip() +
+  ggtitle("2022") +
+  labs(x = "State", y = "Proportion", fill = "Condition Groups") +
+  scale_fill_brewer(palette = "Set3") +
+  theme_bw() + #Get rid of grey background
+  theme(panel.grid=element_blank()) +
+  theme(legend.title = element_text(size = 20), #change legend title font size
+        legend.text = element_text(size = 15), #change legend text font size
+        plot.title = element_text(size = 40, face = "bold", hjust = 0.5),
+        axis.text = element_text(size = 15),
+        axis.title = element_text(size = 15))
+
+g2_2022
+```
+  
+In 2020-2022, from the deaths reported, people in United States with COVID-19 only, respiratory diseases, and circulatory diseases take a large proportion. The group with all other conditions and causes(residual) take up a noticeable proportion as well in the population. Other conditions like intentional and unintentional injury, vascular and unspecified dementia, and obesity take a very small proportion of deaths. To conclude the findings by analyzing the conditional groups, we can say that we need to pay more attention to people with circulatory and respiratory diseases because they are more likely to die due to COVID-19 virus. 
+
+## Graph 3
+
+### 2020-2022
+```{r, fig.width = 9, fig.height = 5}
+g3_all <- ggplot(DF3_all, aes(x = fct_reorder2(DF3_all$`Condition Group`, DF3_all$`Age Group`, DF3_all$Proportion, .fun = last2, .desc = F), # Reorder
+                           y = DF3_all$Proportion,
+                           fill = DF3_all$`Age Group`)) +
+  geom_col(position = "fill") +
+  coord_flip() +
+  ggtitle("2020-2022") +
+  labs(x = "Condition Groups", y = "Proportion", fill = "Age Groups") +
+  scale_fill_brewer(palette = "Set3") +
+  theme_bw() + #Get rid of grey background
+  theme(panel.grid=element_blank()) +
+  theme(legend.title = element_text(size = 10), #change legend title font size
+        legend.text = element_text(size = 7.5), #change legend text font size
+        plot.title = element_text(size = 20, face = "bold", hjust = 0.5),
+        axis.text = element_text(size = 10),
+        axis.title = element_text(size = 10)) +
+  scale_x_discrete(labels = wrap_format(40))
+
+g3_all
+```
+
+### 2020
+```{r, fig.width = 9, fig.height = 5}
+g3_2020 <- ggplot(DF3_2020, aes(x = fct_reorder2(DF3_2020$`Condition Group`, DF3_2020$`Age Group`, DF3_2020$Proportion, .fun = last2, .desc = F), # Reorder
+                           y = DF3_2020$Proportion,
+                           fill = DF3_2020$`Age Group`)) +
+  geom_col(position = "fill") +
+  coord_flip() +
+  ggtitle("2020") +
+  labs(x = "Condition Groups", y = "Proportion", fill = "Age Groups") +
+  scale_fill_brewer(palette = "Set3") +
+  theme_bw() + #Get rid of grey background
+  theme(panel.grid=element_blank()) +
+  theme(legend.title = element_text(size = 10), #change legend title font size
+        legend.text = element_text(size = 7.5), #change legend text font size
+        plot.title = element_text(size = 20, face = "bold", hjust = 0.5),
+        axis.text = element_text(size = 10),
+        axis.title = element_text(size = 10)) +
+  scale_x_discrete(labels = wrap_format(40))
+
+g3_2020
+```
+
+### 2021
+```{r, fig.width = 9, fig.height = 5}
+g3_2021 <- ggplot(DF3_2021, aes(x = fct_reorder2(DF3_2021$`Condition Group`, DF3_2021$`Age Group`, DF3_2021$Proportion, .fun = last2, .desc = F), # Reorder
+                           y = DF3_2021$Proportion,
+                           fill = DF3_2021$`Age Group`)) +
+  geom_col(position = "fill") +
+  coord_flip() +
+  ggtitle("2021") +
+  labs(x = "Condition Groups", y = "Proportion", fill = "Age Groups") +
+  scale_fill_brewer(palette = "Set3") +
+  theme_bw() + #Get rid of grey background
+  theme(panel.grid=element_blank()) +
+  theme(legend.title = element_text(size = 10), #change legend title font size
+        legend.text = element_text(size = 7.5), #change legend text font size
+        plot.title = element_text(size = 20, face = "bold", hjust = 0.5),
+        axis.text = element_text(size = 10),
+        axis.title = element_text(size = 10)) +
+  scale_x_discrete(labels = wrap_format(40))
+
+g3_2021
+```
+
+### 2022
+```{r, fig.width = 9, fig.height = 5}
+g3_2022 <- ggplot(DF3_2022, aes(x = fct_reorder2(DF3_2022$`Condition Group`, DF3_2022$`Age Group`, DF3_2022$Proportion, .fun = last2, .desc = F), # Reorder
+                           y = DF3_2022$Proportion,
+                           fill = DF3_2022$`Age Group`)) +
+  geom_col(position = "fill") +
+  coord_flip() +
+  ggtitle("2022") +
+  labs(x = "Condition Groups", y = "Proportion", fill = "Age Groups") +
+  scale_fill_brewer(palette = "Set3") +
+  theme_bw() + #Get rid of grey background
+  theme(panel.grid=element_blank()) +
+  theme(legend.title = element_text(size = 10), #change legend title font size
+        legend.text = element_text(size = 7.5), #change legend text font size
+        plot.title = element_text(size = 20, face = "bold", hjust = 0.5),
+        axis.text = element_text(size = 10),
+        axis.title = element_text(size = 10)) +
+  scale_x_discrete(labels = wrap_format(40))
+
+g3_2022
+```
+  
+From analyzing the age groups and conditions of the deaths in United States from 2020-2022, for those deaths reported with underlying diseases, people with ages 45+ take up about more than 90%. In the condition of Alzheimer disease and vascular and unspecified dementia, people with ages 85+ take up more than 50% of the deaths in these condition groups. The next dangerous age group is ages 75-84, also takes about 25% of the proportion deaths. For the other conditions except obesity, age groups of 55-64, 65-74, 75-84, and 85+ each take up about 20% in each of those conditions. In the obesity group, age groups of 25-34, 45-44, 45-54 have noticeable increases in the proportion deaths comparing to other condition groups, and people with ages 85+ this time takes up only about less than 5% of the proportion deaths.
+
+To conclude, people that are older than 55 with some underlying diseases are easier to experience severe symptoms and easier to die from COVID-19.
+  
+## Graph 4
+### 2020-2022
+```{r, fig.width = 15, fig.height = 6}
+g4_all <- ggplot(DF4_all, aes(x = `COVID-19 Deaths`, y = `Condition Group`)) + 
+  geom_point(aes(fill = factor(`Age Group`)), shape = 21, color = "black", size = 3, alpha = 0.6) +
+  ggtitle("2020-2022") +
+  labs(x = "COVID-19 Deaths", y = "Condition Group", fill = "Age Group") +
+  theme(legend.title = element_text(size = 15), #change legend title font size
+        legend.text = element_text(size = 10), #change legend text font size
+        plot.title = element_text(size = 20, face = "bold", hjust = 0.5),
+        axis.text = element_text(size = 10),
+        axis.title = element_text(size = 12)) +
+  scale_y_discrete(labels = wrap_format(40)) +
+  scale_fill_brewer(palette = "Spectral")
+g4_all
+```
+
+### 2020
+```{r, fig.width = 15, fig.height = 6}
+g4_2020 <- ggplot(DF4_2020, aes(x = `COVID-19 Deaths`, y = `Condition Group`)) + 
+  geom_point(aes(fill = factor(`Age Group`)), shape = 21, color = "black", size = 3, alpha = 0.6) +
+  ggtitle("2020") +
+  labs(x = "COVID-19 Deaths", y = "Condition Group", fill = "Age Group") +
+  theme(legend.title = element_text(size = 15), #change legend title font size
+        legend.text = element_text(size = 10), #change legend text font size
+        plot.title = element_text(size = 20, face = "bold", hjust = 0.5),
+        axis.text = element_text(size = 10),
+        axis.title = element_text(size = 12)) +
+  scale_y_discrete(labels = wrap_format(40)) +
+  scale_fill_brewer(palette = "Spectral")
+g4_2020
+```
+
+### 2021
+```{r, fig.width = 15, fig.height = 6}
+g4_2021 <- ggplot(DF4_2021, aes(x = `COVID-19 Deaths`, y = `Condition Group`)) + 
+  geom_point(aes(fill = factor(`Age Group`)), shape = 21, color = "black", size = 3, alpha = 0.6) +
+  ggtitle("2021") +
+  labs(x = "COVID-19 Deaths", y = "Condition Group", fill = "Age Group") +
+  theme(legend.title = element_text(size = 15), #change legend title font size
+        legend.text = element_text(size = 10), #change legend text font size
+        plot.title = element_text(size = 20, face = "bold", hjust = 0.5),
+        axis.text = element_text(size = 10),
+        axis.title = element_text(size = 12)) +
+  scale_y_discrete(labels = wrap_format(40)) +
+  scale_fill_brewer(palette = "Spectral")
+g4_2021
+```
+
+### 2022
+```{r, fig.width = 15, fig.height = 6}
+g4_2022 <- ggplot(DF4_2022, aes(x = `COVID-19 Deaths`, y = `Condition Group`)) + 
+  geom_point(aes(fill = factor(`Age Group`)), shape = 21, color = "black", size = 3, alpha = 0.6) +
+  ggtitle("2022") +
+  labs(x = "COVID-19 Deaths", y = "Condition Group", fill = "Age Group") +
+  theme(legend.title = element_text(size = 15), #change legend title font size
+        legend.text = element_text(size = 10), #change legend text font size
+        plot.title = element_text(size = 20, face = "bold", hjust = 0.5),
+        axis.text = element_text(size = 10),
+        axis.title = element_text(size = 12)) +
+  scale_y_discrete(labels = wrap_format(40)) +
+  scale_fill_brewer(palette = "Spectral")
+g4_2022
+```
+  
+The graphs of condition groups by COVID-19 deaths in 2020-2022 also clearly support our previous conclusion that people with respiratory diseases, circulatory diseases and COVID-19 only takes up a large proportion of COVID-19 deaths in United States in that period, and the older the age, the higher chance of you dying from COVID-19 deaths. We can observe that the blue and dark green points are far from the others representing high number of deaths, and the distribution for COVID-19, respiratory diseases and circulatory diseases are far more spread out than other conditions with the older age groups each having more than 200,000 deaths comparing with other conditions with points more concentrated below 100,000 deaths. Besides, we can see that in the year of 2021, the proportion of deaths among elderly people (older than 65) with COVID-19 and circulatory diseases decreases a lot compared with other time periods.  
+
+## Graph 5
+```{r, fig.width = 16, fig.height = 5}
+# Respiratory Diseases
+g5_R <- ggplot(data = DF5_R) +
+  geom_mosaic(aes(x = product(Condition, Year), fill = Condition, weight = `COVID-19 Deaths`)) +
+  ggtitle("Respiratory Diseases") +
+  labs(x = "Year", y = "Condition", fill = "Condition") +
+  theme_bw() + #Get rid of grey background +
+  theme(panel.grid=element_blank()) +
+  theme(plot.title = element_text(face = "bold", hjust = 0.5))
+# Circulatory Diseases
+g5_C <- ggplot(data = DF5_C) +
+  geom_mosaic(aes(x = product(Condition, Year), fill = Condition, weight = `COVID-19 Deaths`)) +
+  ggtitle("Circulatory Diseases") +
+  labs(x = "Year", y = "Condition", fill = "Condition") +
+  theme_bw() + #Get rid of grey background +
+  theme(panel.grid=element_blank()) +
+  theme(plot.title = element_text(face = "bold", hjust = 0.5))
+ggarrange(g5_R, g5_C, ncol = 2)
+```
+  
+In graph 5 we further explores the two condition groups - respiratory diseases and circulatory diseases by their sub-conditions respectively through mosaic plots. The two mosaic plots gives the proportion of COVID-19 deaths that each sub-condition accounts for from 2020 to 2022. For respiratory diseases, the distribution of sub-conditions doesn't vary much over time, and the proportion taken by each condition remains relatively steady. Influenza and adult respiratory distress syndromes are the two major conditions that lead to the most of COVID-19 deaths caused by respiratory diseases. On the other hand, the proportion distribution of sub-conditions for circulatory diseases is more even. Hypertensive diseases account for the largest fraction but it is not significantly greater than other conditions. Similarly, the distribution remains relatively steady over time. 
+
+## Graph 6
+```{r,fig.width = 10, fig.height = 10}
+G9 <- raw_data %>% subset(Group == "By Total",
+                           select = c('Condition Group', 'COVID-19 Deaths'))
+G9C<-aggregate(G9$`COVID-19 Deaths`, by= list('Conditional Group'=G9$`Condition Group`), FUN = sum, na.rm = TRUE)
+G9C%>%mutate(x=fct_reorder(G9C$'Conditional Group',G9C$x))%>%
+ggplot(aes(x, y=G9C$x))+
+  geom_bar(stat="identity", fill="dark grey") +
+    coord_flip() +
+    ggtitle("2020-2022 Condition Group v.s. Deaths")+
+    labs(x = "Conditional Group", y = "Deaths") +
+    theme_bw()+theme(legend.title = element_text(size = 15), #change legend title font size
+        legend.text = element_text(size = 10), #change legend text font size
+        plot.title = element_text(size = 20, face = "bold", hjust = 0.5),
+        axis.text = element_text(size = 10),
+        axis.title = element_text(size = 12)) 
+```
+
+## Graph 7
+```{r,fig.width = 10, fig.height = 10}
+G10 <- raw_data %>% subset( Group == "By Total"& (`Condition Group` == "Respiratory diseases"),
+                           select = c('Condition', 'COVID-19 Deaths'))
+G10C<-aggregate(G10$`COVID-19 Deaths`, by= list('Condition'=G10$`Condition`), FUN = sum, na.rm = TRUE)
+G10C%>%mutate(x=fct_reorder(G10C$'Condition',G10C$x))%>%
+ggplot(aes(x, y=G10C$x))+
+  geom_bar(stat="identity", fill="dark grey") +
+    coord_flip() +
+    ggtitle("2020-2022 Respiratory Condition v.s. Deaths")+
+    labs(x = "Condition", y = "Deaths") +
+    theme_bw()+theme(legend.title = element_text(size = 15), #change legend title font size
+        legend.text = element_text(size = 10), #change legend text font size
+        plot.title = element_text(size = 20, face = "bold", hjust = 0.5),
+        axis.text = element_text(size = 10),
+        axis.title = element_text(size = 12)) 
+```
+  
+Graph 6 & 7 are here to illustrate the mosaic plots in graph 5 more quantatitively. During the severe COVID-19 period 2020-2022, the highest proportion deaths of United States' citizen is conditioned by respiratory diseases of close to 500,000 deaths. In the respiratory disease group category, 200,000 deaths are people with also Influenza and pneumonia, and 170,000 are people with respiratory failures.  
+  
+## Graph 8
+```{r}
+g6 <- ggplot(DF6, aes(x = `Age Group`, y = Year, fill = `COVID-19 Deaths`)) +
+  geom_tile(color = "white", lwd = 1.5, linetype = 1) +
+  geom_text(aes(label = `COVID-19 Deaths`), color = "white", size = 3) +
+  scale_fill_gradient(low = "blue", high = "red") +
+  coord_fixed()
+g6
+```
+  
+Graph 8 aims to explore the number of deaths in different age groups from 2020 to 2022. The sequential color depth encoding in a heatmap is very intuitive for visualizing this difference. In terms of age groups, it is very obvious that elder age groups are more vulnerable to COVID-19 in terms of the number of fatal cases, and the difference can be huge. For example, the number of fatal case for the age group 65-74 is more than hundred times the fatal cases of age group 0-24 in all times. This result indicates that age is a very important factor in determining the fatality of COVID-19, and more medical resources should be focused on the elder age groups. In terms of time period, the situation in 2021 was worse than 2020, and then got better in 2022. This could be the result of implementing effective prevention methods like vaccines and virus mutations.
+  
+## Graph 9
+```{r, fig.width = 8, fig.height = 3}
+g7 <- ggplot(DF7, aes(Date, `COVID-19 Deaths`)) +
+  geom_line() +
+  geom_point() +
+  scale_x_date(date_breaks = "1 month", date_labels = "%Y-%m") +
+  theme(axis.text.x = element_text(angle = -45, hjust = 1))
+g7
+```
+  
+Graph 9 is a time series plot of COVID-19 deaths. It demonstrates the pandemic's progression from 2020 to 2022. The first peak came in 2020-05, which was only two months after start of the pandemic, indicating that COVID-19 is highly infectious and capable of exponential growth. The second peak occured on 2021-02, which was nearly twice as much as the first peak. but soon start to decrease sharply. In 2022-02, there was a third and last peak, which might indicate the occurrance of a variation of the virus. 
+  
+## Graph 10
+```{r, fig.width = 17, fig.height = 8}
+g8 <- ggplot(DF8, aes(Date, `COVID-19 Deaths`)) +
+  geom_line() +
+  theme_bw() +
+  facet_geo(~ State, grid = "us_state_grid2", scales = "free_y")
+g8
+```
+  
+Graph 10 explores the relationship between the number of COVID-19 deaths and locations. The time series plots of COVID-19 fatal cases for each U.S. state is plotted on their respective location on the U.S. map, giving an intuitive demonstration of how the progression of COVID-19 differs between different states. California, Texas and Florida are the states with the most COVID-19 death cases. Those three states have a large population base, so people live more closely to each other and thus make the implementation of social distancing and other effective prevention methods harder. On the other hand, most states have a similar trend of COVID-19 death cases over time, which also corresponds to the trend we discovered from the previous national-wide time series plot. Besides, states that went through a peak in the early stage of COVID-19 burst (around March 2020) are mainly in the east coast.
+

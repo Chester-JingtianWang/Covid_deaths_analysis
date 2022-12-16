@@ -1,8 +1,335 @@
+```{r}
+library(ggplot2)
+library(plyr)
+library(dplyr)
+library(readxl)
+library(ggpubr)
+library(forcats)
+library(repr)
+library(scales)
+library(ggmosaic)
+library(geofacet)
+library(stringr)
+library(redav)
+library(RColorBrewer)
+```
+
 # Data 
 
-## Sources
+
+```{r}
+# Raw Data
+raw_data <- read_excel('Raw_data.xlsx',
+                       col_types = c(rep(c("text"), 11), "numeric", "numeric", "text")) # Avoid read_excel converts year and month into logical values
+```
+
+## Sources  
+
+### Describe the data cources  
+
+Since our research orientation is Covid-19 health related analysis in the United States, the first data source we consider is the data set from the CDC. We decided to use the Conditions Contributing to COVID-19 Deaths, by State and Age, Provisional 2020-2022 data set from CDC because the data set contains interesting information to analyze, such as date, age group, condition and death which could potentially answer the questions we come up with about our research topic. Moreover, the information of the data set is fresh and up to date, last updated on 10/26/2022 and updates weekly.
+  
+The data set was collected based on a current flow of mortality data in the National Vital Statistics System. This data include deaths occurring within the 50 states and the District of Columbia which have been received and coded as of the date specified. Since it takes several weeks for death records to be submitted to National Center for Health Statistics (NCHS), processed, coded, and tabulated, we should notice that the data may be incomplete, especially for the more recent time periods.  
+
+Except from this data set, there are other similar COVID-19 death data from some local and state health departments. The reason why we choose this one is its comprehensiveness. Compared with other data sets, not only does this one include laboratory confirmed COVID-19 deaths, it also includes clinically confirmed COVID-19 deaths.  
+
+### Basic information about the data  
+
+Number of records: 471961 rows, 14 columns  
+Type of variables:  
+1) "Date As Of": date. This is the date of analysis.  
+2) "Start Date": date. This is the first week-ending date of data period.  
+3) "End Date": date. This is the last week-ending date of data period.  
+4) "Group": chr. This is time-period indicator for record: by Month, by Year, Total.  
+5) "Year": num. This is the year in which death occurred.  
+6) "Month": num. This is the month in which death occurred.  
+7) "State": chr. This is the jurisdiction of occurrence.    
+8) "Condition Group": chr. This is the medical condition group.  
+9) "Condition": chr. This is condition contributing to deaths involving COVID-19.  
+10) "ICD10_codes": chr. This is the ICD-10 code for condition.  
+11) "Age Group": chr.  
+12) "COVID-19 Deaths": num.  
+13) "Number of Mentions": num.  
+14) "Flag": chr. Counts less than 10 suppressed.  
+
+### Issues/problems with the data
+For "COVID-19 Deaths" and "Number of Mentions" columns, their accurate vales will not be revealed when they are between 1-9 since they are suppressed in accordance with NCHS confidentiality standards.  
 
 ## Cleaning / transformation
+Our data does not require any cleaning since it is already in a tidy form. It needs transformations for each of the graph made and the data frames for each graph are shown below.  
+
+### Graph 1
+```{r}
+#US map
+states_map <- map_data(map = "state")
+```
+#### 2020-2022
+```{r}
+## Manipulate raw data frame
+DF1_all <- raw_data %>% subset(Group == "By Total" & State != "United States",
+                           select = c(State, `COVID-19 Deaths`))
+DF1_all <- aggregate(DF1_all[,2], by = list(State = DF1_all$State), FUN = sum, na.rm = TRUE)
+## Merge
+DF1_all <- data.frame(region = tolower(DF1_all$State), DF1_all) # Change states name to lowercase
+DF1_all <- DF1_all %>% select(region, COVID.19.Deaths)
+map_and_data_all <- merge(states_map, DF1_all, by = "region", all.x = TRUE, sort = FALSE)
+head(map_and_data_all)
+```
+#### 2020
+```{r}
+## Manipulate raw data frame
+DF1_2020 <- raw_data %>% subset(Group == "By Year" & Year == "2020" & State != "United States",
+                                select = c(State, `COVID-19 Deaths`))
+DF1_2020 <- aggregate(DF1_2020[,2], by = list(State = DF1_2020$State), FUN = sum, na.rm = TRUE)
+## Merge
+DF1_2020 <- data.frame(region = tolower(DF1_2020$State), DF1_2020) # Change states name to lowercase
+DF1_2020 <- DF1_2020 %>% select(region, COVID.19.Deaths)
+map_and_data_2020 <- merge(states_map, DF1_2020, by = "region", all.x = TRUE, sort = FALSE)
+head(map_and_data_2020)
+```
+#### 2021
+```{r}
+## Manipulate raw data frame
+DF1_2021 <- raw_data %>% subset(Group == "By Year" & Year == "2021" & State != "United States",
+                                select = c(State, `COVID-19 Deaths`))
+DF1_2021 <- aggregate(DF1_2021[,2], by = list(State = DF1_2021$State), FUN = sum, na.rm = TRUE)
+## Merge
+DF1_2021 <- data.frame(region = tolower(DF1_2021$State), DF1_2021) # Change states name to lowercase
+DF1_2021 <- DF1_2021 %>% select(region, COVID.19.Deaths)
+map_and_data_2021 <- merge(states_map, DF1_2021, by = "region", all.x = TRUE, sort = FALSE)
+head(map_and_data_2021)
+```
+#### 2022
+```{r}
+## Manipulate raw data frame
+DF1_2022 <- raw_data %>% subset(Group == "By Year" & Year == "2022" & State != "United States",
+                                select = c(State, `COVID-19 Deaths`))
+DF1_2022 <- aggregate(DF1_2022[,2], by = list(State = DF1_2022$State), FUN = sum, na.rm = TRUE)
+## Merge
+DF1_2022 <- data.frame(region = tolower(DF1_2022$State), DF1_2022) # Change states name to lowercase
+DF1_2022 <- DF1_2022 %>% select(region, COVID.19.Deaths)
+map_and_data_2022 <- merge(states_map, DF1_2022, by = "region", all.x = TRUE, sort = FALSE)
+head(map_and_data_2022)
+```
+### Graph 2
+```{r}
+DF2 <- raw_data %>% subset(Group != "By Month" & State != "United States",
+                           select = c(Group, Year, State, `Condition Group`, `COVID-19 Deaths`))
+DF2$Year[which(is.na(DF2$Year))] <- "2020-2022"
+DF2 <- aggregate(DF2$`COVID-19 Deaths`, by = list(Year = DF2$Year, State = DF2$State, `Condition Group` = DF2$`Condition Group`), FUN = sum, na.rm = TRUE)
+colnames(DF2)[4] <- "COVID-19 Deaths"
+```
+
+#### 2020-2022
+```{r}
+DF2_all <- DF2 %>% subset(Year == "2020-2022")
+DF2_all <- 
+  DF2_all %>% 
+    group_by(State) %>%
+    mutate(Proportion = `COVID-19 Deaths` / sum(`COVID-19 Deaths`))
+```
+
+#### 2020
+```{r}
+DF2_2020 <- DF2 %>% subset(Year == "2020")
+DF2_2020 <- 
+  DF2_2020 %>% 
+    group_by(State) %>%
+    mutate(Proportion = `COVID-19 Deaths` / sum(`COVID-19 Deaths`))
+head(DF2_2020)
+```
+
+#### 2021
+```{r}
+DF2_2021 <- DF2 %>% subset(Year == "2021")
+DF2_2021 <- 
+  DF2_2021 %>% 
+    group_by(State) %>%
+    mutate(Proportion = `COVID-19 Deaths` / sum(`COVID-19 Deaths`))
+head(DF2_2021)
+```
+
+#### 2022
+```{r}
+DF2_2022 <- DF2 %>% subset(Year == "2022")
+DF2_2022 <- 
+  DF2_2022 %>% 
+    group_by(State) %>%
+    mutate(Proportion = `COVID-19 Deaths` / sum(`COVID-19 Deaths`))
+head(DF2_2022)
+```
+
+### Graph 3
+```{r}
+DF3 <- raw_data %>% subset(Group != "By Month" & State == "United States" & `Age Group` != "All Ages",
+                           select = c(Group, Year, `Condition Group`, `Age Group`, `COVID-19 Deaths`))
+DF3$Year[which(is.na(DF3$Year))] <- "2020-2022"
+DF3 <- aggregate(DF3$`COVID-19 Deaths`, by = list(Year = DF3$Year, `Age Group` = DF3$`Age Group`, `Condition Group` = DF3$`Condition Group`), FUN = sum, na.rm = TRUE)
+colnames(DF3)[4] <- "COVID-19 Deaths"
+```
+
+#### 2020-2022
+```{r}
+DF3_all <- DF3 %>% subset(Year == "2020-2022")
+DF3_all <-
+  DF3_all %>%
+  group_by(`Condition Group`) %>%
+  mutate(Proportion = `COVID-19 Deaths` / sum(`COVID-19 Deaths`))
+DF3_all <- DF3_all %>% subset(`Age Group` != "Not stated")
+head(DF3_all)
+```
+
+#### 2020
+```{r}
+DF3_2020 <- DF3 %>% subset(Year == "2020")
+DF3_2020 <-
+  DF3_2020 %>%
+  group_by(`Condition Group`) %>%
+  mutate(Proportion = `COVID-19 Deaths` / sum(`COVID-19 Deaths`))
+DF3_2020 <- DF3_2020 %>% subset(`Age Group` != "Not stated")
+head(DF3_2020)
+```
+
+#### 2021
+```{r}
+DF3_2021 <- DF3 %>% subset(Year == "2021")
+DF3_2021 <-
+  DF3_2021 %>%
+  group_by(`Condition Group`) %>%
+  mutate(Proportion = `COVID-19 Deaths` / sum(`COVID-19 Deaths`))
+DF3_2021 <- DF3_2021 %>% subset(`Age Group` != "Not stated")
+head(DF3_2021)
+```
+
+#### 2022
+```{r}
+DF3_2022 <- DF3 %>% subset(Year == "2022")
+DF3_2022 <-
+  DF3_2022 %>%
+  group_by(`Condition Group`) %>%
+  mutate(Proportion = `COVID-19 Deaths` / sum(`COVID-19 Deaths`))
+DF3_2022 <- DF3_2022 %>% subset(`Age Group` != "Not stated")
+head(DF3_2022)
+```
+
+### Graph 4
+```{r}
+DF4 <- raw_data %>% subset(Group != "By Month" & State == "United States" & `Age Group` != "All Ages" & `Age Group` != "Not stated",
+                           select = c(Group, Year, `Condition Group`, `Age Group`, `COVID-19 Deaths`))
+DF4$Year[which(is.na(DF4$Year))] <- "2020-2022"
+```
+
+#### 2020-2022
+```{r}
+DF4_all <- DF4 %>% subset(Year == "2020-2022")
+DF4_all <- aggregate(DF4_all$`COVID-19 Deaths`, by = list(Year = DF4_all$Year, `Age Group` = DF4_all$`Age Group`, `Condition Group` = DF4_all$`Condition Group`), FUN = sum, na.rm = TRUE)
+colnames(DF4_all)[4] <- "COVID-19 Deaths"
+head(DF4_all)
+```
+
+#### 2020
+```{r}
+DF4_2020 <- DF4 %>% subset(Year == "2020")
+DF4_2020 <- aggregate(DF4_2020$`COVID-19 Deaths`, by = list(Year = DF4_2020$Year, `Age Group` = DF4_2020$`Age Group`, `Condition Group` = DF4_2020$`Condition Group`), FUN = sum, na.rm = TRUE)
+colnames(DF4_2020)[4] <- "COVID-19 Deaths"
+head(DF4_2020)
+```
+
+#### 2021
+```{r}
+DF4_2021 <- DF4 %>% subset(Year == "2021")
+DF4_2021 <- aggregate(DF4_2021$`COVID-19 Deaths`, by = list(Year = DF4_2021$Year, `Age Group` = DF4_2021$`Age Group`, `Condition Group` = DF4_2021$`Condition Group`), FUN = sum, na.rm = TRUE)
+colnames(DF4_2021)[4] <- "COVID-19 Deaths"
+head(DF4_2021)
+```
+
+#### 2022
+```{r}
+DF4_2022 <- DF4 %>% subset(Year == "2022")
+DF4_2022 <- aggregate(DF4_2022$`COVID-19 Deaths`, by = list(Year = DF4_2022$Year, `Age Group` = DF4_2022$`Age Group`, `Condition Group` = DF4_2022$`Condition Group`), FUN = sum, na.rm = TRUE)
+colnames(DF4_2022)[4] <- "COVID-19 Deaths"
+head(DF4_2022)
+```
+
+### Graph 5 
+```{r}
+DF5 <- raw_data %>% subset(Group != "By Month" & State == "United States" & (`Condition Group` == "Respiratory diseases" | `Condition Group` == "Circulatory diseases"),
+                           select = c(Group, Year, `Condition Group`, Condition, `COVID-19 Deaths`))
+DF5$Year[which(is.na(DF5$Year))] <- "2020-2022"
+```
+
+#### Respiratory Diseases
+```{r}
+DF5_R <- DF5 %>% subset(`Condition Group` == "Respiratory diseases")
+DF5_R <- aggregate(DF5_R$`COVID-19 Deaths`, by = list(Year = DF5_R$Year, Condition = DF5_R$Condition), FUN = sum, na.rm = TRUE)
+colnames(DF5_R)[3] <- "COVID-19 Deaths"
+DF5_R$Year <- factor(DF5_R$Year, levels = c(2020, 2021, 2022, "2020-2022")) # Reorder Year
+head(DF5_R)
+```
+
+#### Circulatory diseases
+```{r}
+DF5_C <- DF5 %>% subset(`Condition Group` == "Circulatory diseases")
+DF5_C <- aggregate(DF5_C$`COVID-19 Deaths`, by = list(Year = DF5_C$Year, Condition = DF5_C$Condition), FUN = sum, na.rm = TRUE)
+colnames(DF5_C)[3] <- "COVID-19 Deaths"
+DF5_C$Year <- factor(DF5_C$Year, levels = c(2020, 2021, 2022, "2020-2022")) # Reorder Year
+head(DF5_C)
+```
+
+### Graph 8
+```{r}
+DF6 <- raw_data %>% subset(Group == "By Year" & `Age Group` != "Not stated" & `Age Group` != "All Ages",
+                           select = c(Year, `Age Group`, `COVID-19 Deaths`))
+DF6 <- aggregate(DF6$`COVID-19 Deaths`, by = list(Year = DF6$Year, `Age Group` = DF6$`Age Group`), FUN = sum, na.rm = TRUE)
+colnames(DF6)[3] <- "COVID-19 Deaths"
+head(DF6)
+```
+
+### Graph 9
+```{r}
+DF7 <- raw_data %>% subset(Group == "By Month" & `Age Group` == "All Ages" & State == "United States",
+                           select = c(Year, Month, `COVID-19 Deaths`))
+DF7 <- aggregate(DF7$`COVID-19 Deaths`, by = list(Year = DF7$Year, Month = DF7$Month), FUN = sum, na.rm = TRUE)
+colnames(DF7)[3] <- "COVID-19 Deaths"
+DF7 <- DF7 %>% mutate(Date = str_c(Year, Month, sep = "-"))
+DF7$Date <- paste(DF7$Date, "1", sep = "-")
+DF7$Date <- as.Date(DF7$Date)
+DF7 <- DF7 %>% subset(select = c(`COVID-19 Deaths`, Date))
+head(DF7)
+```
+
+### Graph 10
+```{r}
+DF8 <- raw_data %>% subset(Group == "By Month" & `Age Group` == "All Ages" & State != "United States",
+                           select = c(Year, Month, State, `COVID-19 Deaths`))
+DF8 <- aggregate(DF8$`COVID-19 Deaths`, by = list(Year = DF8$Year, Month = DF8$Month, State = DF8$State), FUN = sum, na.rm = TRUE)
+colnames(DF8)[4] <- "COVID-19 Deaths"
+DF8 <- DF8 %>% mutate(Date = str_c(Year, Month, sep = "-"))
+DF8$Date <- paste(DF8$Date, "1", sep = "-")
+DF8$Date <- as.Date(DF8$Date)
+DF8 <- DF8 %>% subset(select = c(State, `COVID-19 Deaths`, Date))
+DF8 <-
+  DF8 %>% group_by(State) %>%
+  mutate(ymax = max(`COVID-19 Deaths`))
+head(DF8)
+```
 
 ## Missing value analysis
 
+```{r}
+a <- paste("The total number of misisng values in the data frame is",  as.character(sum(is.na(raw_data))), sep = " ")
+print(a)
+```
+
+```{r,fig.width = 20, fig.height = 20}
+plot_missing(raw_data, percent = TRUE)
+```
+```{r, fig.width = 5, fig.height=5}
+#496800 
+totalm <- data.frame(table(is.na(raw_data)))
+barplot(totalm$Freq,main = "Total Missing Values",xlab = "Number of Is Missing",
+ylab = "Frequency",names.arg = c("FALSE","TRUE"))
+``` 
+
+By adding up the number of missing values in the data frame,we can see that there are 667,064 missing values. Based on the "Total Missing Values" chart, it is not a large proportion of the total data points. "FALSE" on the x-axis of the chart represents cells in the data frame that have no missing values. "TURE" represents cells with missing values.  
+However, based on the top chart in the first plot, for the columns, the Flag column has about 70% of values missing, COVID-19 Deaths and number of mentions columns have about 25% of values missing, and months and years have about less than 10% of values missing.  For the Flag column, its appearance only means that the values of COVID-19 deaths and number of mentions are between 1-9. Therefore, the missing value in the Flag column does not matter at all. For the 'COVID-19 Deaths' and 'Number of Mentions' columns, we think it is not a big deal because those missing values indicate that some of the values with small counts between 1-9 are suppressed in accordance with NCHS confidentiality standards, so it is rational. What's more, since these missing values are just between 1-9, they will not have a great influence on the final analysis. For the Month column and the Year column, the reason they have missing values is some of the rows represent the COVID data in 2020-2022 (which leads to value missing in Year and Month) or in the whole year (which leads to value missing in Month). Therefore, they will not affect our analysis, as well.
