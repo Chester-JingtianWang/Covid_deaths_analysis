@@ -6,7 +6,8 @@
 This interactive plot includes death-date curve for each state. By clicking on the target state on the map, its death-date curve will show below. Besides, you can see the state name and its total number of deaths by putting the mouse on the target state for about 1.5s.
 
 ## Graph
-The interactive plot is down below. Please flip down. It is not missing!
+When we build book locally, the graph can be successfully shown but somehow when we access the book by url, it disappears. Therefore, we upload files of interactive part in this link https://github.com/KenSu223/5702_d3. Please follow the README procedure to view the graph. Sorry for the inconvenience.  
+
 <html>
  
 <head>
